@@ -15,7 +15,7 @@ $(function () {
     gardenCtx = gardenCanvas.getContext("2d");
     gardenCtx.globalCompositeOperation = "lighter";
     garden = new Garden(gardenCtx, gardenCanvas);
-	
+
 	$("#content").css("width", $loveHeart.width() + $("#code").width());
 	$("#content").css("height", Math.max($loveHeart.height(), $("#code").height()));
 	$("#content").css("margin-top", Math.max(($window.height() - $("#content").height()) / 2, 10));
@@ -36,6 +36,9 @@ $(window).resize(function() {
 });
 
 function getHeartPoint(angle) {
+	$loveHeart = $("#loveHeart");
+	var offsetX = $loveHeart.width() / 2;
+	var offsetY = $loveHeart.height() / 2 - 55;
 	var t = angle / Math.PI;
 	var x = 19.5 * (16 * Math.pow(Math.sin(t), 3));
 	var y = - 20 * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
@@ -92,25 +95,34 @@ function startHeartAnimation() {
 	};
 })(jQuery);
 
-function timeElapse(date){
+function timeElapse(meetDate, loveDate){
 	var current = Date();
-	var seconds = (Date.parse(current) - Date.parse(date)) / 1000;
-	var days = Math.floor(seconds / (3600 * 24));
-	seconds = seconds % (3600 * 24);
-	var hours = Math.floor(seconds / 3600);
-	if (hours < 10) {
-		hours = "0" + hours;
+	var meetSeconds = (Date.parse(current) - Date.parse(meetDate)) / 1000;
+	var loveSeconds = (Date.parse(current) - Date.parse(loveDate)) / 1000;
+	var meetDays = Math.floor(meetSeconds / (3600 * 24));
+	var loveDays = Math.floor(loveSeconds / (3600 * 24));
+	// hours
+	meetSeconds = meetSeconds % (3600 * 24);
+	loveSeconds = loveSeconds % (3600 * 24);
+	// minutes
+	meetSeconds = meetSeconds % 3600;
+	loveSeconds = loveSeconds % 3600;
+	// seconds
+	meetSeconds = meetSeconds % 60;
+	loveSeconds = loveSeconds % 60;
+	if (meetSeconds < 10) {
+		meetSeconds = "0" + meetSeconds;
 	}
-	seconds = seconds % 3600;
-	var minutes = Math.floor(seconds / 60);
-	if (minutes < 10) {
-		minutes = "0" + minutes;
+	if (loveSeconds < 10) {
+		loveSeconds = "0" + loveSeconds;
 	}
-	seconds = seconds % 60;
-	if (seconds < 10) {
-		seconds = "0" + seconds;
-	}
-	var result = "<span class=\"digital\">" + days + "</span> days <span class=\"digital\">" + hours + "</span> hours <span class=\"digital\">" + minutes + "</span> minutes <span class=\"digital\">" + seconds + "</span> seconds"; 
+	var result = 
+	"<span class=\"digital\"> " + meetDays + "</span> days "
+	 + "<span class=\"digital\">" + meetSeconds + "</span> seconds <span> &nbsp; </span>"
+	 + "<span class=\"text\"> & </span> "
+	 + "<span class=\"digital\"> " + loveDays + "</span> days "
+	 + "<span class=\"digital\">" + loveSeconds + "</span> seconds"
+	 + "<br>";
 	$("#elapseClock").html(result);
 }
 
